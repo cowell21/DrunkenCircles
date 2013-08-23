@@ -1,6 +1,6 @@
 var Circles = (function () {
   function Circle(centerX, centerY, radius) {
-    this.centerX = centerX
+    this.centerX = centerX;
     this.centerY = centerY;
     this.radius = radius;
   }
@@ -12,6 +12,11 @@ var Circles = (function () {
       maxY * Math.random(),
       Circle.MAX_RADIUS * Math.random()
     );
+  };
+
+  Circle.prototype.moveRandom = function (maxX, maxY) {
+    this.centerY = Math.abs((this.centerY + Math.random() * 2 - 1) % maxY);
+    this.centerX = Math.abs((this.centerX + Math.random() * 2 - 1) % maxX);
   };
 
   Circle.prototype.render = function (ctx) {
@@ -34,7 +39,7 @@ var Circles = (function () {
 
   function Game(xDim, yDim, numCircles) {
     this.xDim = xDim;
-    this.yDim = yDim
+    this.yDim = yDim;
 
     this.circles = []
     for (var i = 0; i < numCircles; ++i) {
@@ -43,11 +48,18 @@ var Circles = (function () {
   }
 
   Game.prototype.render = function (ctx) {
+
     ctx.clearRect(0, 0, this.xDim, this.yDim);
 
     for (var i = 0; i < this.circles.length; ++i) {
       console.log(this.circles[i]);
       this.circles[i].render(ctx);
+    }
+  };
+
+  Game.prototype.moveCircles = function () {
+    for (var i = 0; i < this.circles.length; ++i) {
+      this.circles[i].moveRandom(this.xDim, this.yDim);
     }
   };
 
@@ -59,8 +71,9 @@ var Circles = (function () {
     // render at 60 FPS
     var that = this;
     window.setInterval(function () {
+      that.moveCircles();
       that.render(ctx);
-    }, 1000);
+    }, 100);
   };
 
   return {
