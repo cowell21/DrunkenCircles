@@ -1,9 +1,18 @@
 <html>
-<head>
-</head>
-<body>
-  <script src="jquery-1.9.1.js"></script>
-  <script src="circles.js"></script>
-  <script src="app.js"></script>
-</body>
+  <head>
+    <script src="circles.js"></script>
+  </head>
+
+  <body>
+    <script>
+      var canvas = document.createElement("canvas");
+      canvas.setAttribute("width", "500");
+      canvas.setAttribute("height", "500");
+
+      var body = document.getElementsByTagName("body")[0];
+      body.appendChild(canvas);
+
+      new Circles.Game(500, 500, 10).start(canvas);
+    </script>
+  </body>
 </html>
