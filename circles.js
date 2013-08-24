@@ -1,11 +1,14 @@
-var Circles = (function () {
-  function Circle(centerX, centerY, radius) {
+(function (root) {
+  var Circles = root.Circles = (root.Circles || {});
+
+  var Circle = Circles.Circle = function (centerX, centerY, radius) {
     this.centerX = centerX;
     this.centerY = centerY;
     this.radius = radius;
-  }
+  };
 
   Circle.MAX_RADIUS = 25;
+
   Circle.randomCircle = function (maxX, maxY) {
     return new Circle(
       maxX * Math.random(),
@@ -15,13 +18,14 @@ var Circles = (function () {
   };
 
   Circle.prototype.moveRandom = function (maxX, maxY) {
-    this.centerY = Math.abs((this.centerY + Math.random() * 2 - 1) % maxY);
-    this.centerX = Math.abs((this.centerX + Math.random() * 2 - 1) % maxX);
+    var dx = (Math.random() * 2) - 1;
+    var dy = (Math.random() * 2) - 1;
+
+    this.centerX = Math.abs((this.centerX + (dx * this.radius)) % maxX);
+    this.centerY = Math.abs((this.centerY + (dy * this.radius)) % maxY);
   };
 
   Circle.prototype.render = function (ctx) {
-    console.log(ctx);
-
     ctx.fillStyle = "black";
     ctx.beginPath();
 
@@ -37,7 +41,7 @@ var Circles = (function () {
     ctx.fill();
   };
 
-  function Game(xDim, yDim, numCircles) {
+  var Game = Circles.Game = function (xDim, yDim, numCircles) {
     this.xDim = xDim;
     this.yDim = yDim;
 
@@ -48,19 +52,18 @@ var Circles = (function () {
   }
 
   Game.prototype.render = function (ctx) {
-
     ctx.clearRect(0, 0, this.xDim, this.yDim);
 
-    for (var i = 0; i < this.circles.length; ++i) {
-      console.log(this.circles[i]);
-      this.circles[i].render(ctx);
-    }
+    this.circles.forEach(function (circle) {
+      circle.render(ctx);
+    });
   };
 
   Game.prototype.moveCircles = function () {
-    for (var i = 0; i < this.circles.length; ++i) {
-      this.circles[i].moveRandom(this.xDim, this.yDim);
-    }
+    var game = this;
+    this.circles.forEach(function (circle) {
+      circle.moveRandom(game.xDim, game.yDim);
+    });
   };
 
   Game.prototype.start = function (canvasEl) {
@@ -69,15 +72,10 @@ var Circles = (function () {
     var ctx = canvasEl.getContext("2d");
 
     // render at 60 FPS
-    var that = this;
+    var game = this;
     window.setInterval(function () {
-      that.moveCircles();
-      that.render(ctx);
+      game.moveCircles();
+      game.render(ctx);
     }, 100);
   };
-
-  return {
-    Circle: Circle,
-    Game: Game
-  };
-})();
+})(this);
