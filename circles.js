@@ -68,10 +68,10 @@
 
   Game.prototype.start = function (canvasEl) {
     // get a 2d canvas drawing context. The canvas API lets us call
-    // a `getContext` method on a cnvas DOM element.
+    // a `getContext` method on a canvas DOM element.
     var ctx = canvasEl.getContext("2d");
 
-    // render at 60 FPS
+    // render at 10 FPS
     var game = this;
     window.setInterval(function () {
       game.moveCircles();
